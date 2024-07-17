@@ -184,14 +184,16 @@ est.OR_df <- function(simXY.data_list, haldane.correct = FALSE){
     # we do not compute the confidence interval manually as it is most likely too complicated for a real user 
     
   }
+  
+  
+  # for remaining methods/pipelines: get uncorrected contingencytables #
+  # Woolf corrects automatically for zeros in the contingency table 
+  conttable.uncorrect <- lapply(X = simXY.data_list$datXY_list, FUN = contingencytable, haldane.correct = FALSE)  
     
     for(i in grep("Woolf", methods)){
       
-      # Woolf corrects automatically for zeros in the contingency table 
-      conttable <- lapply(X = simXY.data_list$datXY_list, FUN = contingencytable, haldane.correct = FALSE)
       
-      
-      est.results <- lapply(X = conttable, FUN = function(z) tryCatch(Prop.or(z[1,], z[2,], CImethod = "Woolf"),
+      est.results <- lapply(X = conttable.uncorrect, FUN = function(z) tryCatch(Prop.or(z[1,], z[2,], CImethod = "Woolf"),
                                                                       error = function(e) NA))
       
       # point estimate
@@ -209,11 +211,23 @@ est.OR_df <- function(simXY.data_list, haldane.correct = FALSE){
     # now, however, using small or Woolf for those contingency tables with sampling zeros (fallback)
     if(haldane.correct == TRUE){
       
+      # check whether contingencytable contains (i) no sampling zeros, (ii) sampling
+      # zeros in the off-diagonals, or (iii) sampling zeros in the main diagonals
+      cat.zero <- check.zeros(conttable.uncorrect)
       
-      OR.est$midp_fallback.small <- unlist(lapply(FUN = midp_fisher.fallback, X = simXY.data_list$datXY_list, orig.method = "midp", fallback.method = "small"))
-      OR.est$midp_fallback.Woolf <- unlist(lapply(FUN = midp_fisher.fallback, X = simXY.data_list$datXY_list, orig.method = "midp", fallback.method = "Woolf"))
-      OR.est$fisher_fallback.small <- unlist(lapply(FUN = midp_fisher.fallback, X = simXY.data_list$datXY_list, orig.method = "fisher", fallback.method = "small"))
-      OR.est$fisher_fallback.Woolf <- unlist(lapply(FUN = midp_fisher.fallback, X = simXY.data_list$datXY_list, orig.method = "fisher", fallback.method = "Woolf"))
+      # define pipelines 
+      OR.est$midp_fallback.small <- ifelse(cat.zero == 0 | cat.zero == 2, OR.est$midp, OR.est$small)
+      OR.est$midp_fallback.Woolf <- ifelse(cat.zero == 0 , OR.est$midp, OR.est$Woolf)
+      OR.est$fisher_fallback.small <- ifelse(cat.zero == 0 | cat.zero == 2, OR.est$fisher, OR.est$small)
+      OR.est$fisher_fallback.Woolf <- ifelse(cat.zero == 0 , OR.est$fisher, OR.est$Woolf)
+      
+      
+      # OR.est$midp_fallback.small <- ifelse(cat.zero == 0 | cat.zero == 2, OR.est$midp, OR.est$small)
+      # unlist(lapply(FUN = midp_fisher.fallback, X = simXY.data_list$datXY_list, orig.method = "midp", fallback.method = "small"))
+      # OR.est$midp_fallback.Woolf <- unlist(lapply(FUN = midp_fisher.fallback, X = simXY.data_list$datXY_list, orig.method = "midp", fallback.method = "Woolf"))
+      # OR.est$fisher_fallback.small <- unlist(lapply(FUN = midp_fisher.fallback, X = simXY.data_list$datXY_list, orig.method = "fisher", fallback.method = "small"))
+      # OR.est$fisher_fallback.Woolf <- unlist(lapply(FUN = midp_fisher.fallback, X = simXY.data_list$datXY_list, orig.method = "fisher", fallback.method = "Woolf"))
+      # 
       
       
     }  
@@ -287,14 +301,13 @@ compute.bias_logscale <- function(OR.est.df, true.OR){
     
     for(i in 1:(ncol(OR.est.df)-1)){
       
-      # indicate columns of CI.df that correspond to current method
-      ind_method <- grep(methods[i], names(OR.est.df))
+      
       
       ###########################
       # available case analysis # 
       ###########################
       
-      bias.df_aca <- OR.est.df[ind_notInf[[i]], ind_method]
+      bias.df_aca <- OR.est.df[ind_notInf[[i]], i]
       
       # get coverage 
       bias.df[1,i] <- mean(log(bias.df_aca) - log(true.OR))
@@ -457,6 +470,40 @@ midp_fisher.fallback <- function(datXY, orig.method, fallback.method){
   
   return(OR.estimate)
 }
+
+
+check.zeros <- function(contingencytable.list){
+  
+  # contingencytable.list <- conttables
+  
+  cat.zero <- c()
+  for(i in 1:length(contingencytable.list)){
+    
+    if(all(contingencytable.list[[i]] != 0)){
+      
+      cat.zero[i] <- 0
+      
+    }else if((contingencytable.list[[i]][1,2] == 0) | (contingencytable.list[[i]][2,1] == 0)){
+      
+      
+      cat.zero[i] <- 1
+      
+      
+    }else if(contingencytable.list[[i]][1,1] == 0 | contingencytable.list[[i]][2,2] == 0){
+    
+    
+    cat.zero[i] <- 2
+    
+    }
+    
+  }
+  
+  
+  return(as.factor(cat.zero))
+  
+}
+
+
 
 
 
