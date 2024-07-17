@@ -273,15 +273,45 @@ simulation = experiment(sapa[,c("smoking", "neuro", "consci", "agree", "open", "
                         "smoking", 1000, 15, 0.8, 1)
 
 save(simulation, file = "~/Examples/Example_CI/Data/Results/simulation.RData")
+load("~/MPVExamples/MPVExamples/Example_CI/Data/Results/simulation.RData")
+
 
 # get number of iterations in which method N failed
 sum(is.na(simulation$conf.int_naive))
 
 
+#####################################################
+# first three values in Table 2 in main manuscript ##
+#####################################################
 # get coverage for both methods, for available and complete case analysis 
 handle.missCI(simulation$check.cover_naive, simulation$check.cover_correct)
 
+################################################
+# fourth column in Table 2 in main manuscript ##
+################################################
 
+# get coverage resulting from setting undefined "naive" CIs to point estimator 
+check.cover_naive.singleton <- c()
+
+for(i in 1:length(simulation$check.cover_naive)){
+  
+  # if the CI is NOT undefined, take the corresponding covering indicator
+  if(!is.na(simulation$check.cover_naive[[i]])){
+    
+    check.cover_naive.singleton[i] <- simulation$check.cover_naive[[i]]
+  
+  }else{# else: set undefined CI as corresponding point estimator and check 
+    # whether it is equal to the approx. true AUC
+      
+    check.cover_naive.singleton[i] <- simulation$true.AUC[[i]] == simulation$subsampl.AUC_aggr[[i]]
+    
+    
+    
+    }
+  
+}
+# resulting coverage 
+mean(check.cover_naive.singleton)
 
 ################################################################################
 ### Investigate source of missingness ##########################################
