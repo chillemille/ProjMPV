@@ -268,7 +268,7 @@ est.OR_df <- function(simXY.data_list, haldane.correct = FALSE){
 #                                   those iterations 1:R for which valid estimations are made for ALL methods 
 
 # Note that we compute the empirical bias on the log scale 
-compute.bias_logscale <- function(OR.est.df, true.OR){
+compute.bias_logscale <- function(OR.est.df, true.OR, absolute = FALSE){
   
   # OR.est.df <- est.OR_fallback[[1]]$estimates
   # true.OR <- est.OR_fallback[[1]]$true.OR
@@ -310,9 +310,15 @@ compute.bias_logscale <- function(OR.est.df, true.OR){
       bias.df_aca <- OR.est.df[ind_notInf[[i]], i]
       
       # get coverage 
+      if(absolute == FALSE){
+      
       bias.df[1,i] <- mean(log(bias.df_aca) - log(true.OR))
       
-
+      }else if(absolute == TRUE){
+        
+        bias.df[1,i] <- mean((log(bias.df_aca) - log(true.OR))^2)
+        
+      }
     
       ##########################
       # complete case analysis # 
@@ -321,8 +327,18 @@ compute.bias_logscale <- function(OR.est.df, true.OR){
       # reduce estimates df to iterations successful for ALL methods 
       est.OR_clean <- OR.est.df[ind_completecase,i]
       
-      # calculate mean bias of available OR estimations
+      # calculate mean (absolute) bias of available OR estimations
+      
+      if(absolute == FALSE){
+        
       bias.df[2,i] <- mean(log(est.OR_clean) - log(true.OR))
+      
+      }else if(absolute == TRUE){
+        
+      bias.df[2,i] <- mean((log(est.OR_clean) - log(true.OR))^2)
+        
+        
+      }
   
       
     }

@@ -70,6 +70,10 @@ load("~/MPVExamples/MPVExamples/Example_OR/Data/Simulated_XYData/est.OR.RData")
 bias <- lapply(X = est.OR, FUN = function(est.OR_df) compute.bias_logscale(est.OR_df$estimates, est.OR_df$true.OR)) %>%
                      do.call(what = rbind) %>% mutate(params = as.factor(params), deal.NA = as.factor(deal.NA))
 
+bias.absolute <- lapply(X = est.OR, FUN = function(est.OR_df) compute.bias_logscale(est.OR_df$estimates, est.OR_df$true.OR, absolute = TRUE)) %>%
+                    do.call(what = rbind) %>% mutate(params = as.factor(params), deal.NA = as.factor(deal.NA))
+
+
 
 ###############################
 # rank by bias (on log scale) # 
@@ -93,15 +97,17 @@ bias.long$can.deal <- as.factor(ifelse(bias.long$est.method %in% c("Woolf", "sma
 # make plot on ranks #
 ######################
 
+cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 add_labels_xaxis <- paste("Scen. ", 1:8)
 
 plot.rank <- ggplot(data = bias.long,
                aes(x = interaction(params, deal.NA, lex.order = TRUE),
                    y = rank, group = 1)) +
   geom_line(aes(group=as.factor(paste0(params, "-", est.method)),  col = est.method))+
-  geom_point(aes(group=as.factor(paste0(params, "-", est.method)), col = est.method)) +
-  scale_y_continuous(breaks = 1:6) +
-  scale_x_discrete(labels= rep(c("ACA", "CCA"),
+  geom_point(aes(group=as.factor(paste0(params, "-", est.method, size = 12)), col = est.method, shape = est.method)) +
+  scale_y_continuous(breaks = 5:1, transform = "reverse") +
+  scale_x_discrete(labels= rep(c("Discard 1", "Discard 2"),
                                times = 8)) +
   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
@@ -111,36 +117,44 @@ plot.rank <- ggplot(data = bias.long,
   # # Add the tool names to the plot:
   annotate(geom = "text",
            x = 1.5 + 2*(0:(length(unique(bias.long$params))-1)),
-           y = 0,
+           y = 5.7,
            label = add_labels_xaxis, size = 4) +
-  coord_cartesian(ylim=c(1,5),clip = "off") + # clip = "off" required to add scenario number below the plot
+  coord_cartesian(ylim=c(5,1),clip = "off") + # clip = "off" required to add scenario number below the plot
   xlab("Simulation scenarios") +
  ylab("Rank") + 
-  labs(color='OR estimation method')  
-## uncomment to save
+  labs(color='OR estimation method')  + 
+  #theme_bw() + 
+  theme(panel.grid.minor = element_blank()) +
+  scale_fill_manual(values=cbPalette) + 
+  scale_shape_manual(values = c(15, 17, 18, 15, 11))
+
+
+plot.rank
+
+
 
 # make plot on raw (but absolute) "bias values" 
-plot.raw <- ggplot(data = bias.long,
-                    aes(x = interaction(params, deal.NA, lex.order = TRUE),
-                        y = abs(bias), group = 1)) +
-  geom_line(aes(group=as.factor(paste0(params, "-", est.method)),  col = est.method))+
-  geom_point(aes(group=as.factor(paste0(params, "-", est.method)), col = est.method)) +
-  scale_x_discrete(labels= rep(c("ACA", "CCA"),
-                               times = 8)) +
-  # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
-  theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
-        plot.margin = margin(t=1, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
-        axis.title.y = element_text(size =14), 
-        axis.title.x= element_text(size = 13, vjust = -14)) +
-  # # Add the tool names to the plot:
-  annotate(geom = "text",
-           x = 1.5 + 2*(0:(length(unique(bias.long$params))-1)),
-           y = -0.13,
-           label = add_labels_xaxis, size = 4) +
-  coord_cartesian(ylim=c(0, 0.6),clip = "off") + # clip = "off" required to add scenario number below the plot
-  xlab("Simulation scenarios") +
-  ylab("Absolute bias") + 
-  labs(color='OR estimation \n method') 
+# plot.raw <- ggplot(data = bias.long,
+#                     aes(x = interaction(params, deal.NA, lex.order = TRUE),
+#                         y = abs(bias), group = 1)) +
+#   geom_line(aes(group=as.factor(paste0(params, "-", est.method)),  col = est.method))+
+#   geom_point(aes(group=as.factor(paste0(params, "-", est.method)), col = est.method, shape = est.method)) +
+#   scale_x_discrete(labels= rep(c("Discard for failing", "Discard for all"),
+#                                times = 8)) +
+#   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
+#   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
+#         plot.margin = margin(t=1, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
+#         axis.title.y = element_text(size =14), 
+#         axis.title.x= element_text(size = 13, vjust = -14)) +
+#   # # Add the tool names to the plot:
+#   annotate(geom = "text",
+#            x = 1.5 + 2*(0:(length(unique(bias.long$params))-1)),
+#            y = -0.13,
+#            label = add_labels_xaxis, size = 4) +
+#   coord_cartesian(ylim=c(0, 0.6),clip = "off") + # clip = "off" required to add scenario number below the plot
+#   xlab("Simulation scenarios") +
+#   ylab("Absolute bias") + 
+#   labs(color='OR estimation \n method') 
 
 
 ################################################################################
@@ -152,25 +166,6 @@ est.OR_fallback <- lapply(X = datXY_sim, FUN = est.OR_df, haldane.correct = TRUE
 
 save(est.OR_fallback, file = "~/MPVExamples/MPVExamples/Example_OR/Data/Simulated_XYData/est.OR_fallback.RData")
 # load("~/MPVExamples/MPVExamples/Example_OR/Data/Simulated_XYData/est.OR_fallback.RData")
-
-# only for me, should be solved by current version of the code 
-# for(i in 1:8){
-# est.OR_fallback[[i]]$estimates[ind.zero[[i]], ]$midp_fallback.Woolf <-
-#   lapply(FUN = unname, X = est.OR_fallback[[i]]$estimates[ind.zero[[i]], ]$midp_fallback.Woolf) 
-# 
-# est.OR_fallback[[i]]$estimates$midp_fallback.Woolf <- unlist(est.OR_fallback[[i]]$estimates$midp_fallback.Woolf)
-# 
-# est.OR_fallback[[i]]$estimates[ind.zero[[i]], ]$fisher_fallback.Woolf <-
-#   lapply(FUN = unname, X = est.OR_fallback[[i]]$estimates[ind.zero[[i]], ]$fisher_fallback.Woolf) 
-# 
-# est.OR_fallback[[i]]$estimates$fisher_fallback.Woolf <- unlist(est.OR_fallback[[i]]$estimates$fisher_fallback.Woolf)
-#
-#
-# est.OR_fallback[[i]]$estimates$midp_fallback.small <- unlist(est.OR_fallback[[i]]$estimates$midp_fallback.small)
-# est.OR_fallback[[i]]$estimates$fisher_fallback.small <- unlist(est.OR_fallback[[i]]$estimates$fisher_fallback.small)
-#  }
-
-
 
 # calculate bias
 bias.fallback <- lapply(X = est.OR_fallback, FUN = function(est.OR_df) compute.bias_logscale(est.OR_df$estimates, est.OR_df$true.OR)) %>%
