@@ -128,7 +128,8 @@ plot.rank_bias <- ggplot(data = bias.long,
                                times = 8)) +
   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
-        plot.margin = margin(t=1, b =3, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
+        axis.text.y=element_text(size = 12),
+        plot.margin = margin(t=0, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
         axis.title.y = element_text(size =14), 
         axis.title.x= element_blank()) +
   # # Add the tool names to the plot:
@@ -139,12 +140,12 @@ plot.rank_bias <- ggplot(data = bias.long,
   coord_cartesian(ylim=c(5,1),clip = "off") + # clip = "off" required to add scenario number below the plot
   xlab("Simulation scenario") +
  ylab("Rank (bias)") + 
-  labs(colour='OR estimation method', linetype = "Fails with \n sampling zeros ")  + 
+  labs(colour='OR estimation method', linetype = "Fails with sampling zeros ")  + 
   # theme_bw() + 
   theme(panel.grid.minor = element_blank()) +
 guides(fill="none", col = "none") +
   # scale_colour_hue(l = 60) + 
-  theme(legend.position = "right")
+  theme(legend.position = "top")
 
 
 plot.rank_bias
@@ -179,7 +180,7 @@ mse.long$est.method <- fct_recode(mse.long$est.method,
 # make plot on ranks #
 ######################
 
-add_labels_xaxis <- paste("Scenario. ", 1:8)
+add_labels_xaxis <- paste("Scenario ", 1:8)
 
 plot.rank_mse <- ggplot(data = mse.long,
                         aes(x = interaction(params, deal.NA, lex.order = TRUE),
@@ -192,7 +193,8 @@ plot.rank_mse <- ggplot(data = mse.long,
                                times = 8)) +
   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
-        plot.margin = margin(t=1, b =3, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
+        axis.text.y=element_text(size = 12),
+        plot.margin = margin(t=1, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
         axis.title.y = element_text(size =14), 
         axis.title.x= element_blank()) +
   # # Add the tool names to the plot:
@@ -203,12 +205,12 @@ plot.rank_mse <- ggplot(data = mse.long,
   coord_cartesian(ylim=c(5,1),clip = "off") + # clip = "off" required to add scenario number below the plot
    xlab("Simulation scenario") +
   ylab("Rank (MSE)") + 
-  labs(colour='OR estimation method', linetype = "Fails with \n sampling zeros ")  + 
+  labs(colour='OR estimation method', linetype = "Fails with sampling zeros")  + 
   # theme_bw() + 
   theme(panel.grid.minor = element_blank()) +
   guides(fill="none", col = "none") +
   # scale_colour_hue(l = 60) + 
-  theme(legend.position = "right")
+  theme(legend.position = "top")
 
 
 
@@ -277,10 +279,11 @@ plot.bias_fallback <- ggplot(data = bias_fallback.long,
   geom_label(aes(x = params, y = rank, fill = est.method, fontface = "bold"), col = "white",size = 3.5) +
   scale_y_continuous(breaks = 9:1, transform = "reverse") +
   scale_x_discrete(labels= paste0("Scen. ", 1:8)) +
-  theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
+  theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 12),
+        axis.text.y=element_text(size = 12),
         plot.margin = margin(t=1, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
         axis.title.y = element_text(size =14), 
-        axis.title.x= element_text(size = 13, vjust = -14)) +
+        axis.title.x= element_text(size = 13, vjust = -11)) +
   coord_cartesian(ylim=c(9,1),clip = "off") + # clip = "off" required to add scenario number below the plot
   xlab("Simulation scenario") +
   ylab("Rank (bias)") + 
@@ -318,10 +321,11 @@ plot.mse_fallback <- ggplot(data = mse_fallback.long,
   geom_label(aes(x = params, y = rank, fill = est.method, fontface = "bold"), col = "white",size = 3.5) +
   scale_y_continuous(breaks = 9:1, transform = "reverse") +
   scale_x_discrete(labels= paste0("Scen. ", 1:8)) +
-  theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
+  theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 12),#
+        axis.text.y=element_text(size = 12),
         plot.margin = margin(t=1, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
         axis.title.y = element_text(size =14), 
-        axis.title.x= element_text(size = 13, vjust = -14)) +
+        axis.title.x= element_text(size = 13, vjust = -11)) +
   coord_cartesian(ylim=c(9,1),clip = "off") + # clip = "off" required to add scenario number below the plot
   xlab("Simulation scenario") +
   ylab("Rank (MSE)") + 
