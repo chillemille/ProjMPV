@@ -40,7 +40,7 @@ datXY_sim <- apply(X = scenarios ,MARGIN = 1, function(scen){
 # load results 
 load("~/MPVExamples/MPVExamples/Example_OR/Data/Simulated_XYData/datXY_sim_allscen.RData")
 ################################################################################
-### Check propprtion of contingency table with zero cells in each scenario #####
+### Check proportions of contingency tables with zero cells in each scenario ###
 ################################################################################
 
 lapply(X = datXY_sim, FUN = count.zerotables)
@@ -129,9 +129,9 @@ plot.rank_bias <- ggplot(data = bias.long,
   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
         axis.text.y=element_text(size = 12),
-        plot.margin = margin(t=0, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
+        plot.margin = margin(t=0, b =1.5, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
         axis.title.y = element_text(size =14), 
-        axis.title.x= element_blank()) +
+        axis.title.x= element_text(size = 12, vjust = -14)) +
   # # Add the tool names to the plot:
   annotate(geom = "text",
            x = 1.5 + 2*(0:(length(unique(bias.long$params))-1)),
@@ -194,9 +194,9 @@ plot.rank_mse <- ggplot(data = mse.long,
   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
         axis.text.y=element_text(size = 12),
-        plot.margin = margin(t=1, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
+        plot.margin = margin(t=1, b =1.5, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
         axis.title.y = element_text(size =14), 
-        axis.title.x= element_blank()) +
+        axis.title.x= element_text(size = 12, vjust = -12)) +
   # # Add the tool names to the plot:
   annotate(geom = "text",
            x = 1.5 + 2*(0:(length(unique(mse.long$params))-1)),
