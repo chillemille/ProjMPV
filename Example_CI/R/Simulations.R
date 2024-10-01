@@ -11,6 +11,8 @@ load("./Example_CI/Data/sapa_noltenius.RData")
 # load help functions 
 source("./Example_CI/R/help_functions.R")
 
+dir.create("./Example_CI/Results")
+
 
 
 
@@ -23,7 +25,7 @@ simulation = experiment(sapa[,c("smoking", "neuro", "consci", "agree", "open", "
                         "smoking", 1000, 15, 0.8, 1)
 
 # save(simulation, file = "./Example_CI/Data/Results/simulation.RData")
-# load("./Example_CI/Data/Results/simulation.RData")
+# load("./Example_CI/Results/simulation.RData")
 
 
 # get number of iterations in which method N failed
