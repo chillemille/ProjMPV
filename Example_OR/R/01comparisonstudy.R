@@ -36,11 +36,7 @@ datXY_sim <- apply(X = scenarios ,MARGIN = 1, function(scen){
 
 # load results 
 #load("./Example_OR/Data/Simulated_XYData/datXY_sim_allscen.RData")
-################################################################################
-### Table 5: check proportions of contingency tables with zero cells         ###
-################################################################################
 
-lapply(X = datXY_sim, FUN = count.zerotables)
 
 ################################################################################
 ### Comparison study: discard for all. vs. failing methods only ################

@@ -5,6 +5,15 @@
 source("./Example_OR/R/02comparisonstudy.R")
 
 
+
+###############
+### Table 5 ###
+###############
+
+# check proportions of contingency tables with zero cells
+lapply(X = datXY_sim, FUN = count.zerotables)
+
+
 ######################
 # Figure 1 (A and B) #
 ######################
