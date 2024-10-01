@@ -11,13 +11,6 @@ library(dplyr) # for function between()
 # generate X and Y data with a pre-specified OR 
 sim_OR.data <- function(n.sim, n.obs, p_x, OR, beta0 , seed){
   
-  # n.sim = 1000
-  # n.obs=200
-  # p_x=0.7
-  # OR = 4 
-  # beta0 = 0.3
-  # seed = 4 
-  
   set.seed(seed)
   
   # empty list to be filled with the XY-data from the simulation
@@ -142,10 +135,6 @@ est.OR_df <- function(simXY.data_list, haldane.correct = FALSE){
   OR.est <- data.frame(matrix(NA, ncol = length(methods), nrow =length(simXY.data_list$datXY_list)))
   names(OR.est) <- methods
   
-  # empty data frame to be filled with lower and upper bounds of the CIs 
-  #CI.est <- data.frame(matrix(NA, ncol = 2*length(methods), nrow=length(simXY.data_list$datXY_list))) 
-  #names(CI.est) <- paste0(rep(methods, each = 2), ".", rep(c("lower", "upper"), times = length(methods)))
-  
   
   for(i in which(!1:length(methods) %in% grep("manual", methods))){
     
@@ -167,9 +156,6 @@ est.OR_df <- function(simXY.data_list, haldane.correct = FALSE){
     
     OR.est[,i]  <- unlist(lapply(X = est.results, FUN = function(x) tryCatch(x["1", "estimate"],
                                                                              error = function(e) NA)))
-    # get contingency table with Haldane Correction 
-    # CI.est[, grep(methods[i], names(CI.est))] <- do.call(what = rbind, lapply(X = est.results, FUN = function(x) tryCatch(x["1", c("lower", "upper")],
-    #                                                                                                                      error = function(e) c(NA, NA))))
     
   }
   
@@ -200,10 +186,7 @@ est.OR_df <- function(simXY.data_list, haldane.correct = FALSE){
       OR.est[,i]  <- unlist(lapply(X = est.results, FUN = function(z) tryCatch(z$estimate,
                                                                                error = function(e) NA)))
       
-      # confidence interval
-      # CI.est[, grep(methods[i], names(CI.est))] <- do.call(what = rbind, lapply(X = est.results, FUN = function(x) tryCatch(as.numeric(x$conf.int),
-      #                                                                                                                      error = function(e) c(NA, NA))))
-      
+    
     }
   
   
@@ -425,8 +408,6 @@ compute.coverage <- function(CI.df, true_OR, nominal.coverage = 0.95){
   
 }
 
-#CI.df <- est.OR_df(datXY_sim1)$confidence.interval
-#testtt <- compute.coverage(CI.df, 6.71, nominal.coverage = 0.95)
 
 
 # compute empirical odds ratio from a contingency table manually as ad/bc
