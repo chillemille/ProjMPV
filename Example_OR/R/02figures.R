@@ -2,7 +2,9 @@
 # Reproduce Figures 1 and 2 ###
 ###############################
 
-source("./Example_OR/R/02comparisonstudy.R")
+source("./Example_OR/R/01comparisonstudy.R")
+
+library(viridis)
 
 
 
@@ -28,11 +30,11 @@ add_labels_xaxis <- paste("Scenario ", 1:8)
 Figure1_A <- ggplot(data = bias.long,
                     aes(x = interaction(params, deal.NA, lex.order = TRUE),
                         y = rank, group = 1, label = est.method)) +
-  geom_line(aes(group=as.factor(paste0(params, "-", est.method)), linetype = can.deal, col = est.method), size = 0.65)+
+  geom_line(aes(group=as.factor(paste0(params, "-", est.method)), linetype = can.deal, col = est.method), linewidth = 0.65)+
   geom_label(aes(group=as.factor(paste0(params, "-", est.method)), fill = est.method, fontface = "bold"), col = "white",size = 3.5) +
   # geom_text(aes(group=as.factor(paste0(params, "-", est.method, size = 12)), col = est.method)) + 
   scale_y_continuous(breaks = 5:1, transform = "reverse") +
-  scale_x_discrete(labels= rep(c("Failing", "All"),
+  scale_x_discrete(labels= rep(c("Single", "All"),
                                times = 8)) +
   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
@@ -53,7 +55,9 @@ Figure1_A <- ggplot(data = bias.long,
   theme(panel.grid.minor = element_blank()) +
   guides(fill="none", col = "none") +
   # scale_colour_hue(l = 60) + 
-  theme(legend.position = "top")
+  theme(legend.position = "top") +
+  scale_color_viridis(discrete = TRUE) +
+scale_fill_viridis(discrete = TRUE)
 
 
 
@@ -84,11 +88,11 @@ add_labels_xaxis <- paste("Scenario ", 1:8)
 Figure1_B <- ggplot(data = mse.long,
                     aes(x = interaction(params, deal.NA, lex.order = TRUE),
                         y = rank, group = 1, label = est.method)) +
-  geom_line(aes(group=as.factor(paste0(params, "-", est.method)), linetype = can.deal, col = est.method), size = 0.65)+
+  geom_line(aes(group=as.factor(paste0(params, "-", est.method)), linetype = can.deal, col = est.method), linewidth = 0.65)+
   geom_label(aes(group=as.factor(paste0(params, "-", est.method)), fill = est.method, fontface = "bold"), col = "white",size = 3.5) +
   # geom_text(aes(group=as.factor(paste0(params, "-", est.method, size = 12)), col = est.method)) + 
   scale_y_continuous(breaks = 5:1, transform = "reverse") +
-  scale_x_discrete(labels= rep(c("Failing", "All"),
+  scale_x_discrete(labels= rep(c("Single", "All"),
                                times = 8)) +
   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
@@ -109,7 +113,9 @@ Figure1_B <- ggplot(data = mse.long,
   theme(panel.grid.minor = element_blank()) +
   guides(fill="none", col = "none") +
   # scale_colour_hue(l = 60) + 
-  theme(legend.position = "top")
+  theme(legend.position = "top") +
+  scale_color_viridis(discrete = TRUE) +
+  scale_fill_viridis(discrete = TRUE)
 
 
 
