@@ -31,7 +31,7 @@ Figure1_A <- ggplot(data = bias.long,
                     aes(x = interaction(params, deal.NA, lex.order = TRUE),
                         y = rank, group = 1, label = est.method)) +
   geom_line(aes(group=as.factor(paste0(params, "-", est.method)), linetype = can.deal, col = est.method), linewidth = 0.65)+
-  geom_label(aes(group=as.factor(paste0(params, "-", est.method)), fill = est.method, fontface = "bold"), col = "white",size = 3.5) +
+  geom_label(aes(group=as.factor(paste0(params, "-", est.method)), fill = est.method, fontface = "bold"), col = "white",size = 4) +
   # geom_text(aes(group=as.factor(paste0(params, "-", est.method, size = 12)), col = est.method)) + 
   scale_y_continuous(breaks = 5:1, transform = "reverse") +
   scale_x_discrete(labels= rep(c("Single", "All"),
@@ -89,7 +89,7 @@ Figure1_B <- ggplot(data = mse.long,
                     aes(x = interaction(params, deal.NA, lex.order = TRUE),
                         y = rank, group = 1, label = est.method)) +
   geom_line(aes(group=as.factor(paste0(params, "-", est.method)), linetype = can.deal, col = est.method), linewidth = 0.65)+
-  geom_label(aes(group=as.factor(paste0(params, "-", est.method)), fill = est.method, fontface = "bold"), col = "white",size = 3.5) +
+  geom_label(aes(group=as.factor(paste0(params, "-", est.method)), fill = est.method, fontface = "bold"), col = "white",size = 4) +
   # geom_text(aes(group=as.factor(paste0(params, "-", est.method, size = 12)), col = est.method)) + 
   scale_y_continuous(breaks = 5:1, transform = "reverse") +
   scale_x_discrete(labels= rep(c("Single", "All"),
@@ -124,7 +124,7 @@ plot_grid(Figure1_A, Figure1_B, labels = c('A', 'B'), ncol = 1)
 
 # uncomment to save the figure: 
 
-# ggsave2("./Example_OR/Figures/Figure2.pdf",
+# ggsave2("./Example_OR/Figures/Figure1.eps",
 #         width = 11,
 #         height = 13)
 
@@ -164,7 +164,7 @@ bias_fallback.long$est.method <- fct_recode(bias_fallback.long$est.method,
 Figure2_A <- ggplot(data = bias_fallback.long,
                     aes(x = params, y = rank, label = est.method)) +
   # geom_point(aes(x = params, y = rank, col = est.method)) +
-  geom_label(aes(x = params, y = rank, fill = est.method, fontface = "bold"), col = "white",size = 3.5) +
+  geom_label(aes(x = params, y = rank, fill = est.method, fontface = "bold"), col = "white",size = 4) +
   scale_y_continuous(breaks = 9:1, transform = "reverse") +
   scale_x_discrete(labels= paste0("Scen. ", 1:8)) +
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 12),
@@ -176,7 +176,9 @@ Figure2_A <- ggplot(data = bias_fallback.long,
   xlab("Simulation scenario") +
   ylab("Rank (bias)") + 
   theme(legend.position="none", panel.grid.minor = element_blank()) +
-  scale_colour_hue(l = 90) 
+  # scale_colour_hue(l = 90)  +
+  scale_color_viridis(discrete = TRUE) +
+  scale_fill_viridis(discrete = TRUE)
 
 
 ##############
@@ -205,7 +207,7 @@ mse_fallback.long$est.method <- fct_recode(mse_fallback.long$est.method,
 Figure2_B <- ggplot(data = mse_fallback.long,
                     aes(x = params, y = rank, label = est.method)) +
   # geom_point(aes(x = params, y = rank, col = est.method)) +
-  geom_label(aes(x = params, y = rank, fill = est.method, fontface = "bold"), col = "white",size = 3.5) +
+  geom_label(aes(x = params, y = rank, fill = est.method, fontface = "bold"), col = "white",size = 4) +
   scale_y_continuous(breaks = 9:1, transform = "reverse") +
   scale_x_discrete(labels= paste0("Scen. ", 1:8)) +
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 12),#
@@ -217,15 +219,16 @@ Figure2_B <- ggplot(data = mse_fallback.long,
   xlab("Simulation scenario") +
   ylab("Rank (MSE)") + 
   theme(legend.position="none", panel.grid.minor = element_blank()) +
-  scale_colour_hue(l = 90) 
-## uncomment to save
+  # scale_colour_hue(l = 90) +
+  scale_color_viridis(discrete = TRUE) +
+  scale_fill_viridis(discrete = TRUE)
 
 
 # uncomment to save the figure: 
 
 # Figure 2 (A and B)
 plot_grid(Figure2_A, Figure2_B, labels = c('A', 'B'), ncol = 1)
-ggsave2("./Example_OR/Figures/Figure3.pdf",
-        width = 11,
-        height = 13)
+# ggsave2("./Example_OR/Figures/Figure2.eps",
+#         width = 11,
+#         height = 13)
 
