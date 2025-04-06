@@ -78,9 +78,6 @@ for(i in 1:8){
 bias <- lapply(X = est.OR, FUN = function(est.OR_df) compute.bias_logscale(est.OR_df$estimates, est.OR_df$true.OR)) %>%
                      do.call(what = rbind) %>% mutate(params = as.factor(params), deal.NA = as.factor(deal.NA))
 
-MSE <- lapply(X = est.OR, FUN = function(est.OR_df) compute.bias_logscale(est.OR_df$estimates, est.OR_df$true.OR, absolute = TRUE)) %>%
-                    do.call(what = rbind) %>% mutate(params = as.factor(params), deal.NA = as.factor(deal.NA))
-
 
 
 ##########################################
@@ -123,10 +120,7 @@ bias.fallback <- lapply(X = est.OR_fallback, FUN = function(est.OR_df) compute.b
   mutate(params = as.factor(params), deal.NA = as.factor(deal.NA)) %>%
   filter(deal.NA == "ACA") %>% subset(select = -deal.NA)
 
-mse.fallback <- lapply(X = est.OR_fallback, FUN = function(est.OR_df) compute.bias_logscale(est.OR_df$estimates, est.OR_df$true.OR, absolute = TRUE)) %>%
-  do.call(what = rbind) %>% 
-  mutate(params = as.factor(params), deal.NA = as.factor(deal.NA)) %>%
-  filter(deal.NA == "ACA") %>% subset(select = -deal.NA)
+
 
 
 
