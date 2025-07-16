@@ -17,7 +17,7 @@ dir.create("./Example_OR/Figures")
 dir.create("./Example_OR/Data")
 
 # set simulation parameters as specified in manuscript
-OR <- 2:5
+OR <- c(2, 3)
 n.obs <- 50
 p_x <- c(0.25, 0.5)
 
@@ -65,7 +65,7 @@ est.OR <- lapply(X = datXY_sim, FUN = est.OR_df, haldane.correct = FALSE)
 ##########
 
 # for bias at this point, remove Haldane correction for manual 
-for(i in 1:8){
+for(i in 1:4){
   
   est.OR[[i]]$estimates$manual <- ifelse(est.OR[[i]]$estimates$fisher == 0, 0, 
                                          ifelse(is.finite(est.OR[[i]]$estimates$fisher), est.OR[[i]]$estimates$manual, Inf))
@@ -111,7 +111,7 @@ bias.long$est.method <- fct_recode(bias.long$est.method,
 est.OR_fallback <- lapply(X = datXY_sim, FUN = est.OR_df, haldane.correct = TRUE)
 
 
-#save(est.OR_fallback, file = "./Example_OR/Data/Simulated_XYData/est.OR_fallback.RData")
+#save(est.OR_fallback, file = "./Example_OR/Data/Simulated_XYData/est.OR_fallback_neu.RData")
 # load("./Example_OR/Data/Simulated_XYData/est.OR_fallback.RData")
 
 # calculate bias

@@ -5,6 +5,7 @@
 source("./Example_OR/R/01comparisonstudy.R")
 
 library(viridis)
+library(cowplot)
 
 
 
@@ -25,7 +26,7 @@ lapply(X = datXY_sim, FUN = count.zerotables)
 ##############
 
 
-add_labels_xaxis <- paste("Scenario ", 1:8)
+add_labels_xaxis <- paste("Scenario ", 1:4)
 
 Figure1_A <- ggplot(data = bias.long,
                     aes(x = interaction(params, deal.NA, lex.order = TRUE),
@@ -35,7 +36,7 @@ Figure1_A <- ggplot(data = bias.long,
   # geom_text(aes(group=as.factor(paste0(params, "-", est.method, size = 12)), col = est.method)) + 
   scale_y_continuous(breaks = 5:1, transform = "reverse") +
   scale_x_discrete(labels= rep(c("Single", "All"),
-                               times = 8)) +
+                               times = 4)) +
   # facet_wrap_paginate(~ page, ncol=1, nrow = 1, page = 1)
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 11),
         axis.text.y=element_text(size = 12),
@@ -90,7 +91,7 @@ Figure1_B <- ggplot(data = bias_fallback.long,
   # geom_point(aes(x = params, y = rank, col = est.method)) +
   geom_label(aes(x = params, y = rank, fill = est.method, fontface = "bold"), col = "white",size = 4) +
   scale_y_continuous(breaks = 9:1, transform = "reverse") +
-  scale_x_discrete(labels= paste0("Scen. ", 1:8)) +
+  scale_x_discrete(labels= paste0("Scen. ", 1:4)) +
   theme(axis.text.x=element_text(angle = 50, vjust = 1, hjust = 1, size = 12),
         axis.text.y=element_text(size = 12),
         plot.margin = margin(t=1, b =2, l=1, r=1, unit="cm"),  ## add space below the actual plot (needed for the GSA tool names)
@@ -106,7 +107,7 @@ Figure1_B <- ggplot(data = bias_fallback.long,
 
 
 # combine to obtain Figure 1 
-plot_grid(Figure1_A, Figure1_B, labels = c('A', 'B'), ncol = 1)
+plot_grid(Figure1_A, Figure1_B, labels = c('A', 'B'), ncol = 2)
 
 # uncomment to save the figure: 
 
