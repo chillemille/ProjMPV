@@ -35,7 +35,7 @@ datXY_sim <- apply(X = scenarios ,MARGIN = 1, function(scen){
 # save(datXY_sim, file = "./Example_OR/Data/Simulated_XYData/datXY_sim_allscen.RData")
 
 # load results 
-#load("./Example_OR/Data/Simulated_XYData/datXY_sim_allscen.RData")
+#load("./Example_OR/Data/Simulated_XYData/datXY_sim_allscen_neu.RData")
 
 
 ################################################################################
@@ -58,7 +58,7 @@ est.OR <- lapply(X = datXY_sim, FUN = est.OR_df, haldane.correct = FALSE)
 # save files
 #save(est.OR, file = "./Example_OR/Data/Simulated_XYData/est.OR.RData")
 # load 
-#load("./Example_OR/Data/Simulated_XYData/est.OR.RData")
+#load("./Example_OR/Data/Simulated_XYData/est.OR_neu.RData")
 
 ##########
 # Biases #
