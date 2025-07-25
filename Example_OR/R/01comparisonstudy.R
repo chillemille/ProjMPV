@@ -17,7 +17,7 @@ dir.create("./Example_OR/Figures")
 dir.create("./Example_OR/Data")
 
 # set simulation parameters as specified in manuscript
-OR <- c(2, 3)
+OR <- c(2, 5)
 n.obs <- 50
 p_x <- c(0.25, 0.5)
 
@@ -32,7 +32,7 @@ datXY_sim <- apply(X = scenarios ,MARGIN = 1, function(scen){
 
 
 # save results 
-# save(datXY_sim, file = "./Example_OR/Data/Simulated_XYData/datXY_sim_allscen.RData")
+# save(datXY_sim, file = "./Example_OR/Data/Simulated_XYData/datXY_sim_allscen_neu.RData")
 
 # load results 
 #load("./Example_OR/Data/Simulated_XYData/datXY_sim_allscen_neu.RData")
@@ -41,11 +41,6 @@ datXY_sim <- apply(X = scenarios ,MARGIN = 1, function(scen){
 ################################################################################
 ### Comparison study: discard for all. vs. failing methods only ################
 ################################################################################
-
-# Note: abbreviations
-# - "ACA" stands for discarding data sets with sampling zeros for the failing 
-#   methods only
-# - "CCA" stands for discarding data sets with sampling zeros for ALL methods 
 
 ######################
 # get OR estimations #
@@ -56,7 +51,7 @@ est.OR <- lapply(X = datXY_sim, FUN = est.OR_df, haldane.correct = FALSE)
 
 
 # save files
-#save(est.OR, file = "./Example_OR/Data/Simulated_XYData/est.OR.RData")
+#save(est.OR, file = "./Example_OR/Data/Simulated_XYData/est.OR_neu.RData")
 # load 
 #load("./Example_OR/Data/Simulated_XYData/est.OR_neu.RData")
 
